@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('pasiens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
             $table->string('alamat');
-            $table->string('golongan_darah');
+            $table->string('gol_darah');
             $table->timestamps();
         });
     }

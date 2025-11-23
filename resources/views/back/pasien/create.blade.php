@@ -1,41 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layout.back')
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>
-        Sign in with cover - Tabler - Premium and Open Source dashboard
-        template with responsive and high quality UI.
-    </title>
-    <link href="/tabler/dist/css/tabler.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-flags.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-socials.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-payments.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-vendors.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-marketing.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-themes.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/preview/css/demo.css?1760775496" rel="stylesheet" />
-    <style>
-        @import url("https://rsms.me/inter/inter.css");
-    </style>
-</head>
-
-<body class="d-flex flex-column bg-white">
-    <script src="/tabler/dist/js/tabler-theme.min.js?1760775498"></script>
-    <div class="row g-0 flex-fill">
-        <div class="col-12 col-lg-6 col-xl-5 border-top-wide border-primary d-flex flex-column justify-content-center">
-            <div class="container container-tight my-5 px-lg-5">
-                <h2 class="h3 text-center mb-5">Buat Akun Baru</h2>
-                <form action="/register" method="post" autocomplete="off" @required(true)>
+@section('content')
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                {{-- Anda bisa ganti judulnya di sini --}}
+                <h3 class="card-title">Tambah Data Baru</h3>
+            </div>
+            <div class="card-body">
+                {{-- Pastikan action-nya mengarah ke route 'store' Anda --}}
+                <form action="/back/pasien/" method="post" autocomplete="off">
                     @csrf
+
+                    {{-- Menggunakan struktur mb-4 (margin-bottom) dari contoh register --}}
 
                     <div class="mb-4">
                         <label class="form-label">Nama Lengkap</label>
                         <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                            placeholder="Masukkan nama lengkap" autocomplete="off" name="nama"
-                            value="{{ old('nama') }}" required />
+                            placeholder="Masukkan nama lengkap" name="nama" value="{{ old('nama') }}" required />
                         @error('nama')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -44,8 +26,7 @@
                     <div class="mb-4">
                         <label class="form-label">Email address</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror"
-                            placeholder="kamu@email.com" autocomplete="off" name="email" value="{{ old('email') }}"
-                            required />
+                            placeholder="kamu@email.com" name="email" value="{{ old('email') }}" required />
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -55,7 +36,7 @@
                         <label class="form-label">Password</label>
                         <div class="input-group input-group-flat">
                             <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                placeholder="Masukkan password" autocomplete="off" name="password" required />
+                                placeholder="Masukkan password" name="password" required />
                         </div>
                         @error('password')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -66,8 +47,7 @@
                         <label class="form-label">No Telepon</label>
                         <div class="input-group input-group-flat">
                             <input type="tel" class="form-control @error('telp') is-invalid @enderror"
-                                placeholder="08xxxxxxxxxx" autocomplete="off" name="telp" value="{{ old('telp') }}"
-                                required />
+                                placeholder="08xxxxxxxxxx" name="telp" value="{{ old('telp') }}" required />
                         </div>
                         @error('telp')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -78,7 +58,7 @@
                         <label class="form-label">Tanggal Lahir</label>
                         <div class="input-group input-group-flat">
                             <input type="date" class="form-control @error('tgl_lahir') is-invalid @enderror"
-                                autocomplete="off" name="tgl_lahir" value="{{ old('tgl_lahir') }}" required />
+                                name="tgl_lahir" value="{{ old('tgl_lahir') }}" required />
                         </div>
                         @error('tgl_lahir')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -89,14 +69,14 @@
                         <label class="form-label">Jenis Kelamin</label>
                         <div>
                             <label class="form-check form-check-inline">
-                                <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror"
-                                    type="radio" name="jenis_kelamin" value="Laki Laki"
+                                <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror" type="radio"
+                                    name="jenis_kelamin" value="Laki Laki"
                                     {{ old('jenis_kelamin') == 'Laki Laki' ? 'checked' : '' }} required>
                                 <span class="form-check-label">Laki-laki</span>
                             </label>
                             <label class="form-check form-check-inline">
-                                <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror"
-                                    type="radio" name="jenis_kelamin" value="Perempuan"
+                                <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror" type="radio"
+                                    name="jenis_kelamin" value="Perempuan"
                                     {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }} required>
                                 <span class="form-check-label">Perempuan</span>
                             </label>
@@ -129,26 +109,14 @@
                         @enderror
                     </div>
 
+                    {{-- Menggunakan form-footer untuk tombol submit --}}
                     <div class="form-footer">
                         <button type="submit" class="btn btn-primary w-100">
-                            Buat Akun Baru
+                            Simpan Data
                         </button>
                     </div>
                 </form>
-                <div class="text-center text-secondary mt-3">
-                    Sudah punya akun?
-                    <a href="/login" tabindex="-1">Login</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-6 col-xl-7 d-none d-lg-block">
-            <div class="bg-cover h-100 min-vh-100" style="background-image: url(/tabler/static/photos/bg_2.jpg)">
             </div>
         </div>
     </div>
-
-    <script src="/tabler/dist/js/tabler.min.js?1760775506" defer></script>
-    <script src="/tabler/preview/js/demo.min.js?1760775506" defer></script>
-</body>
-
-</html>
+@endsection

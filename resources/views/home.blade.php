@@ -2,7 +2,7 @@
 <html lang="id">
 
 <head>
-    <title>MedikaCare - Template Bootstrap 4 Gratis dari Colorlib</title>
+    <title>Qythera - Template Bootstrap 4 Gratis dari Colorlib</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -26,14 +26,14 @@
     <link rel="stylesheet" href="/medic/css/flaticon.css">
     <link rel="stylesheet" href="/medic/css/icomoon.css">
     <link rel="stylesheet" href="/medic/css/style.css">
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js'])     --}}
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js'])    --}}
 </head>
 
 <body>
 
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
-            <a class="navbar-brand" href="index.html">Medika<span>Care</span></a>
+            <a class="navbar-brand" href="index.html">Qythera</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
                 aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
@@ -209,7 +209,7 @@
                 <div class="col-md-6 d-flex">
                     <div class="about-wrap">
                         <div class="heading-section heading-section-white mb-5 ftco-animate">
-                            <h2 class="mb-2">MedikaCare dengan sentuhan personal</h2>
+                            <h2 class="mb-2">Qythera dengan sentuhan personal</h2>
                             <p>Kami percaya bahwa setiap pasien unik dan membutuhkan perhatian khusus.</p>
                         </div>
                         <div class="list-services d-flex ftco-animate">
@@ -414,7 +414,7 @@
             <div class="row">
                 <div class="col-md-6 pr-md-5 aside-stretch py-5 choose">
                     <div class="heading-section heading-section-white mb-5 ftco-animate">
-                        <h2 class="mb-2">Prosedur MedikaCare &amp; Layanan Berkualitas Tinggi</h2>
+                        <h2 class="mb-2">Prosedur Qythera &amp; Layanan Berkualitas Tinggi</h2>
                     </div>
                     <div class="ftco-animate">
                         <p>Kami berkomitmen untuk menyediakan layanan kesehatan terbaik dengan prosedur standar
@@ -476,7 +476,7 @@
             <div class="row mb-5">
                 <div class="col-md-3">
                     <div class="ftco-footer-widget mb-4">
-                        <h2 class="ftco-heading-2">MedikaCare.</h2>
+                        <h2 class="ftco-heading-2">Qythera.</h2>
                         <p>Jauh di balik kata gunung, jauh dari negara Vokalia dan Consonantia, hiduplah teks-teks buta.
                         </p>
                     </div>

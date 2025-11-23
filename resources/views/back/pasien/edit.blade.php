@@ -1,41 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layout.back')
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>
-        Sign in with cover - Tabler - Premium and Open Source dashboard
-        template with responsive and high quality UI.
-    </title>
-    <link href="/tabler/dist/css/tabler.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-flags.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-socials.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-payments.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-vendors.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-marketing.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/dist/css/tabler-themes.css?1760775496" rel="stylesheet" />
-    <link href="/tabler/preview/css/demo.css?1760775496" rel="stylesheet" />
-    <style>
-        @import url("https://rsms.me/inter/inter.css");
-    </style>
-</head>
-
-<body class="d-flex flex-column bg-white">
-    <script src="/tabler/dist/js/tabler-theme.min.js?1760775498"></script>
-    <div class="row g-0 flex-fill">
-        <div class="col-12 col-lg-6 col-xl-5 border-top-wide border-primary d-flex flex-column justify-content-center">
-            <div class="container container-tight my-5 px-lg-5">
-                <h2 class="h3 text-center mb-5">Buat Akun Baru</h2>
-                <form action="/register" method="post" autocomplete="off" @required(true)>
+@section('content')
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Edit Data Pasien</h3>
+            </div>
+            <div class="card-body">
+                {{-- Action mengarah ke ID pasien yang diedit --}}
+                <form action="/back/pasien/{{ $pasien->id }}" method="post" autocomplete="off">
                     @csrf
+                    @method('PUT') {{-- Penting untuk proses Update --}}
 
                     <div class="mb-4">
                         <label class="form-label">Nama Lengkap</label>
+                        {{-- Value: Cek old input dulu, jika kosong ambil dari database --}}
                         <input type="text" class="form-control @error('nama') is-invalid @enderror"
-                            placeholder="Masukkan nama lengkap" autocomplete="off" name="nama"
-                            value="{{ old('nama') }}" required />
+                            placeholder="Masukkan nama lengkap" name="nama"
+                            value="{{ old('nama', $pasien->user->nama ?? '') }}" required />
                         @error('nama')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -44,8 +26,8 @@
                     <div class="mb-4">
                         <label class="form-label">Email address</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror"
-                            placeholder="kamu@email.com" autocomplete="off" name="email" value="{{ old('email') }}"
-                            required />
+                            placeholder="kamu@email.com" name="email"
+                            value="{{ old('email', $pasien->user->email ?? '') }}" required />
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -54,9 +36,11 @@
                     <div class="mb-4">
                         <label class="form-label">Password</label>
                         <div class="input-group input-group-flat">
+                            {{-- Password tidak required saat edit. Hanya diisi jika ingin ganti --}}
                             <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                placeholder="Masukkan password" autocomplete="off" name="password" required />
+                                placeholder="Kosongkan jika tidak ingin mengganti password" name="password" />
                         </div>
+                        <small class="form-hint text-muted">Biarkan kosong jika password tidak berubah.</small>
                         @error('password')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
@@ -66,8 +50,8 @@
                         <label class="form-label">No Telepon</label>
                         <div class="input-group input-group-flat">
                             <input type="tel" class="form-control @error('telp') is-invalid @enderror"
-                                placeholder="08xxxxxxxxxx" autocomplete="off" name="telp" value="{{ old('telp') }}"
-                                required />
+                                placeholder="08xxxxxxxxxx" name="telp"
+                                value="{{ old('telp', $pasien->user->telp ?? '') }}" required />
                         </div>
                         @error('telp')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -78,7 +62,9 @@
                         <label class="form-label">Tanggal Lahir</label>
                         <div class="input-group input-group-flat">
                             <input type="date" class="form-control @error('tgl_lahir') is-invalid @enderror"
-                                autocomplete="off" name="tgl_lahir" value="{{ old('tgl_lahir') }}" required />
+                                name="tgl_lahir" {{-- PERHATIKAN BAGIAN VALUE DI BAWAH INI --}}
+                                value="{{ old('tgl_lahir', optional($pasien->user->tgl_lahir)->format('Y-m-d')) }}"
+                                required />
                         </div>
                         @error('tgl_lahir')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -89,15 +75,17 @@
                         <label class="form-label">Jenis Kelamin</label>
                         <div>
                             <label class="form-check form-check-inline">
-                                <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror"
-                                    type="radio" name="jenis_kelamin" value="Laki Laki"
-                                    {{ old('jenis_kelamin') == 'Laki Laki' ? 'checked' : '' }} required>
+                                <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror" type="radio"
+                                    name="jenis_kelamin" value="Laki Laki"
+                                    {{ old('jenis_kelamin', $pasien->user->jenis_kelamin ?? '') == 'Laki Laki' ? 'checked' : '' }}
+                                    required>
                                 <span class="form-check-label">Laki-laki</span>
                             </label>
                             <label class="form-check form-check-inline">
-                                <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror"
-                                    type="radio" name="jenis_kelamin" value="Perempuan"
-                                    {{ old('jenis_kelamin') == 'Perempuan' ? 'checked' : '' }} required>
+                                <input class="form-check-input @error('jenis_kelamin') is-invalid @enderror" type="radio"
+                                    name="jenis_kelamin" value="Perempuan"
+                                    {{ old('jenis_kelamin', $pasien->user->jenis_kelamin ?? '') == 'Perempuan' ? 'checked' : '' }}
+                                    required>
                                 <span class="form-check-label">Perempuan</span>
                             </label>
                         </div>
@@ -109,11 +97,15 @@
                     <div class="mb-4">
                         <label class="form-label">Golongan Darah</label>
                         <select name="gol_darah" class="form-select @error('gol_darah') is-invalid @enderror" required>
-                            <option value="" selected disabled>Pilih Golongan Darah</option>
-                            <option value="A" {{ old('gol_darah') == 'A' ? 'selected' : '' }}>A</option>
-                            <option value="B" {{ old('gol_darah') == 'B' ? 'selected' : '' }}>B</option>
-                            <option value="AB" {{ old('gol_darah') == 'AB' ? 'selected' : '' }}>AB</option>
-                            <option value="O" {{ old('gol_darah') == 'O' ? 'selected' : '' }}>O</option>
+                            <option value="" disabled>Pilih Golongan Darah</option>
+                            <option value="A" {{ old('gol_darah', $pasien->gol_darah) == 'A' ? 'selected' : '' }}>A
+                            </option>
+                            <option value="B" {{ old('gol_darah', $pasien->gol_darah) == 'B' ? 'selected' : '' }}>B
+                            </option>
+                            <option value="AB" {{ old('gol_darah', $pasien->gol_darah) == 'AB' ? 'selected' : '' }}>
+                                AB</option>
+                            <option value="O" {{ old('gol_darah', $pasien->gol_darah) == 'O' ? 'selected' : '' }}>O
+                            </option>
                         </select>
                         @error('gol_darah')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
@@ -123,7 +115,7 @@
                     <div class="mb-4">
                         <label class="form-label">Alamat</label>
                         <textarea name="alamat" class="form-control @error('alamat') is-invalid @enderror" rows="3"
-                            placeholder="Masukkan alamat lengkap..." required>{{ old('alamat') }}</textarea>
+                            placeholder="Masukkan alamat lengkap..." required>{{ old('alamat', $pasien->alamat) }}</textarea>
                         @error('alamat')
                             <div class="invalid-feedback d-block">{{ $message }}</div>
                         @enderror
@@ -131,24 +123,11 @@
 
                     <div class="form-footer">
                         <button type="submit" class="btn btn-primary w-100">
-                            Buat Akun Baru
+                            Simpan Perubahan
                         </button>
                     </div>
                 </form>
-                <div class="text-center text-secondary mt-3">
-                    Sudah punya akun?
-                    <a href="/login" tabindex="-1">Login</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-12 col-lg-6 col-xl-7 d-none d-lg-block">
-            <div class="bg-cover h-100 min-vh-100" style="background-image: url(/tabler/static/photos/bg_2.jpg)">
             </div>
         </div>
     </div>
-
-    <script src="/tabler/dist/js/tabler.min.js?1760775506" defer></script>
-    <script src="/tabler/preview/js/demo.min.js?1760775506" defer></script>
-</body>
-
-</html>
+@endsection

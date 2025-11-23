@@ -24,11 +24,13 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'nama' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'password' => Hash::make('password'), // password default 'password'
+            'telp' => fake()->numerify('0812########'), // Format no. HP Indonesia
+            'tgl_lahir' => fake()->dateTimeBetween('-80 years', '-10 years'), // Umur 10-80 thn
+            'jenis_kelamin' => fake()->randomElement(['Laki Laki', 'Perempuan']),
+            'role' => 'pasien', // <-- PENTING: Default role adalah 'pasien'
         ];
     }
 
