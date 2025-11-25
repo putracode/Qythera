@@ -3,58 +3,54 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Pasien;
+use App\Models\Dokter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
-class PasienController extends Controller
+class DokterController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $totalPasien = Pasien::count();
-        return view('back.pasien.index', ['totalPasien' => $totalPasien]);
+        return view('back.dokter.index',['totalDokter' => Dokter::with('user')->count()]);
     }
 
     public function json()
     {
-        $data = Pasien::with('user')->select('pasiens.*');
+        $data = Dokter::with('user')->select('dokters.*');
 
         return DataTables::of($data)
-            ->addIndexColumn() 
+            ->addIndexColumn()
 
             ->addColumn('nama', function ($row) {
                 return $row->user->nama ?? '-';
             })
-            ->addColumn('gender', function ($row) {
-                return $row->user->jenis_kelamin ?? '-';
-            })
-            ->addColumn('tgl_lahir_umur', function ($row) {
-                if ($row->user->tgl_lahir) {
-                    $tgl = Carbon::parse($row->user->tgl_lahir);
-                    return $tgl->format('d-m-Y') . ' / ' . $tgl->age . ' Thn';
-                }
-                return '-';
+            ->addColumn('email', function ($row) {
+                return $row->user->email ?? '-';
             })
             ->addColumn('telp', function ($row) {
                 return $row->user->telp ?? '-';
             })
+            ->addColumn('gender', function ($row) {
+                return $row->user->jenis_kelamin ?? '-';
+            })
+
             ->addColumn('action', function ($row) {
                 return '
                 <div class="dropdown">
                     <button class="btn dropdown-toggle align-text-top" data-bs-toggle="dropdown">Aksi</button>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item text-info" href="/back/pasien/' . $row->id . '">
+                    <div class="dropdown-menu dropdown-menu-end" style="z-index: 9999;">
+                        <a class="dropdown-item text-info" href="/back/dokter/' . $row->id . '">
                             <i class="ti ti-eye me-2"></i> Detail
                         </a>
-                        <a class="dropdown-item text-warning" href="/back/pasien/' . $row->id . '/edit">
+                        <a class="dropdown-item text-warning" href="/back/dokter/' . $row->id . '/edit">
                             <i class="ti ti-pencil me-2"></i> Edit
                         </a>
-                        <form action="/back/pasien/' . $row->id . '" method="POST" onsubmit="return confirm(\'Yakin ingin menghapus obat ini?\');">
+                        <form action="/back/dokter/' . $row->id . '" method="POST" onsubmit="return confirm(\'Yakin ingin menghapus obat ini?\');">
                             ' . csrf_field() . '
                             ' . method_field('DELETE') . '
                             <button type="submit" class="dropdown-item text-danger">
@@ -68,13 +64,13 @@ class PasienController extends Controller
             ->rawColumns(['action'])
             ->make(true);
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return view('back.pasien.create');
+        return view('back.dokter.create');
     }
 
     /**
@@ -89,8 +85,9 @@ class PasienController extends Controller
             'telp' => 'required|numeric',
             'tgl_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:Laki Laki,Perempuan',
-            'alamat' => 'required',
-            'gol_darah' => 'required'
+
+            'spesialisasi' => 'required|string',
+            'jadwal_praktik' => 'required|string',
         ]);
 
         $userData = [
@@ -100,19 +97,20 @@ class PasienController extends Controller
             'telp' => $validasi['telp'],
             'tgl_lahir' => $validasi['tgl_lahir'],
             'jenis_kelamin' => $validasi['jenis_kelamin'],
-            'role' => 'Pasien'
+            'role' => 'Dokter'
         ];
 
         $user = User::create($userData);
 
-        $pasienData = [
-            'id_user' => $user->id,
-            'alamat' => $validasi['alamat'],
-            'gol_darah' => $validasi['gol_darah']
+        $dokterData = [
+            'id_user' => $user->id, 
+            'spesialisasi' => $validasi['spesialisasi'],
+            'jadwal_praktik' => $validasi['jadwal_praktik'],
         ];
 
-        Pasien::create($pasienData);
-        return redirect('/back/pasien')->with('success', 'Pasien berhasil ditambah!');
+        Dokter::create($dokterData);
+
+        return redirect('/back/dokter')->with('success', 'Data Dokter berhasil ditambahkan!');
     }
 
     /**
@@ -120,7 +118,7 @@ class PasienController extends Controller
      */
     public function show(string $id)
     {
-        return view('back.pasien.detail', ['pasien' => Pasien::with('user')->findOrFail($id)]);
+        return view('back.dokter.detail', ['dokter' => Dokter::with('user')->findOrFail($id)]);
     }
 
     /**
@@ -128,7 +126,7 @@ class PasienController extends Controller
      */
     public function edit(string $id)
     {
-        return view('back.pasien.edit', ['pasien' => Pasien::with('user')->findOrFail($id)]);
+        return view('back.dokter.edit', ['dokter' => Dokter::with('user')->findOrFail($id)]);
     }
 
     /**
@@ -136,19 +134,20 @@ class PasienController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $pasien = Pasien::findOrFail($id);
-        $user = $pasien->user;
+        $dokter = Dokter::findOrFail($id);
+        $user = $dokter->user;
 
 
         $validasi = $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
-            'password' => 'nullable|min:8',
+            'password' => 'nullable|min:8', 
             'telp' => 'required|numeric',
             'tgl_lahir' => 'required|date',
             'jenis_kelamin' => 'required|in:Laki Laki,Perempuan',
-            'alamat' => 'required',
-            'gol_darah' => 'required'
+
+            'spesialisasi' => 'required|string',
+            'jadwal_praktik' => 'required|string',
         ]);
 
         $userData = [
@@ -164,12 +163,13 @@ class PasienController extends Controller
         }
 
         $user->update($userData);
-        $pasien->update([
-            'alamat' => $validasi['alamat'],
-            'gol_darah' => $validasi['gol_darah']
+
+        $dokter->update([
+            'spesialisasi' => $validasi['spesialisasi'],
+            'jadwal_praktik' => $validasi['jadwal_praktik'],
         ]);
 
-        return redirect('/back/pasien')->with('success', 'Data Pasien berhasil diperbarui!');
+        return redirect('/back/dokter')->with('success', 'Data Dokter berhasil diperbarui!');
     }
 
     /**
@@ -177,15 +177,14 @@ class PasienController extends Controller
      */
     public function destroy(string $id)
     {
-        $pasien = Pasien::findOrFail($id);
-        $user = $pasien->user;
-
-        $pasien->delete();
+        $dokter = Dokter::findOrFail($id);
+        $user = $dokter->user; 
+        $dokter->delete();
 
         if ($user) {
             $user->delete();
         }
 
-        return redirect('/back/pasien')->with('success', 'Data Pasien dan Akun berhasil dihapus!');
+        return redirect('/back/dokter')->with('success', 'Data Dokter dan Akun berhasil dihapus!');
     }
 }

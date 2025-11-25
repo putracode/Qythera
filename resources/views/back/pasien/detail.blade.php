@@ -35,7 +35,6 @@
                     <div class="datagrid-title">Nama Lengkap</div>
                     <div class="datagrid-content">
                         <div class="d-flex align-items-center">
-                            {{-- Avatar inisial nama --}}
                             <span class="avatar avatar-xs me-2 rounded">
                                 {{ substr($pasien->user->nama, 0, 1) }}
                             </span>
@@ -105,7 +104,6 @@
         </div>
     </div>
     
-    {{-- Card Terpisah untuk Alamat agar lebih lebar --}}
     <div class="card mt-3">
         <div class="card-header">
             <h3 class="card-title">Alamat Lengkap</h3>

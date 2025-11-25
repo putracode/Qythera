@@ -3,12 +3,12 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h1>Manajemen Pasien</h1>
-            <h4>Kelola data pasien dan lihat riwayat kunjungan.</h4>
+            <h1>Rekam Medis</h1>
+            <h4>Kelola riwayat pemeriksaan dan diagnosa pasien.</h4>
         </div>
         <div>
-            <a href="/back/pasien/create" class="btn btn-primary">
-                <i class="ti ti-plus me-2"></i> Tambah Pasien Baru
+            <a href="{{ route('rekam-medis.create') }}" class="btn btn-primary">
+                <i class="ti ti-plus me-2"></i> Tambah Rekam Medis
             </a>
         </div>
     </div>
@@ -19,11 +19,11 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <span class="bg-primary text-white avatar"><i class="ti ti-user"></i></span>
+                            <span class="bg-cyan text-white avatar"><i class="ti ti-report-medical"></i></span>
                         </div>
                         <div class="col">
-                            <div class="font-weight-medium">Total Pasien</div>
-                            <div class="text-secondary">{{ $totalPasien ?? 0 }}</div>
+                            <div class="font-weight-medium">Total Rekam Medis</div>
+                            <div class="text-secondary">{{ $totalRM ?? 0 }}</div>
                         </div>
                     </div>
                 </div>
@@ -33,16 +33,15 @@
 
     <div class="card p-4">
         <div class="table-responsive">
-            <table class="table table-vcenter card-table" id="tabelPasien" style="width:100%">
+            <table class="table table-vcenter card-table" id="tabelRM" style="width:100%">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Nama</th>
-                        <th>Gender</th>
-                        <th>Tgl Lahir / Umur</th>
-                        <th>Telp</th>
-                        <th>Alamat</th>
-                        <th>Gol Darah</th>
+                        <th>Tgl Periksa</th>
+                        <th>Pasien</th>
+                        <th>Dokter</th>
+                        <th>Diagnosa</th>
+                        <th class="hidden">Catatan</th> 
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -62,25 +61,22 @@
         table.dataTable td.dtr-control {
             white-space: nowrap;
         }
-
         .table-responsive {
-            min-height: 300px;
+            min-height: 300px; 
         }
-
-        .dt-length{
+        .dt-length {
             margin-bottom: 15px;
         }
     </style>
 @endsection
 
 @section('script')
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
-
     <script src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/3.0.2/js/responsive.bootstrap5.min.js"></script>
-
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.bootstrap5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -92,48 +88,26 @@
 
     <script>
         $(document).ready(function() {
-            $("#tabelPasien").DataTable({
+            $("#tabelRM").DataTable({
                 processing: true,
                 serverSide: true,
 
-                ajax: "{{ route('pasien.json') }}",
-                searchDelay: 50,
-                columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false
-                    },
-                    {
-                        data: 'nama',
-                        name: 'user.nama'
-                    },
-                    {
-                        data: 'gender',
-                        name: 'user.jenis_kelamin'
-                    },
-                    {
-                        data: 'tgl_lahir_umur',
-                        name: 'user.tgl_lahir'
-                    },
-                    {
-                        data: 'telp',
-                        name: 'user.telp'
-                    },
-                    {
-                        data: 'alamat',
-                        name: 'alamat'
-                    },
-                    {
-                        data: 'gol_darah',
-                        name: 'gol_darah'
-                    },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    }
+                ajax: "{{ route('rekam_medis.json') }}",
+                
+                searchDelay: 500, 
+
+                "columnDefs": [
+                    { "visible": false, "targets": 'hidden' }
+                ],
+
+                columns: [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'tanggal_rm', name: 'tanggal_rm' },
+                    { data: 'nama_pasien', name: 'pasien.user.nama' },
+                    { data: 'nama_dokter', name: 'dokter.user.nama' }, 
+                    { data: 'diagnosa', name: 'diagnosa' },
+                    { data: 'catatan', name: 'catatan'},
+                    { data: 'action', name: 'action', orderable: false, searchable: false }
                 ],
 
                 responsive: true,
@@ -143,37 +117,32 @@
                     [10, 25, 50, "Semua"],
                 ],
                 autoWidth: false,
+                
                 layout: {
                     topStart: {
                         pageLength: {},
-                        buttons: [{
+                        buttons: [
+                            {
                                 extend: 'excel',
                                 text: '<i class="ti ti-file-spreadsheet"></i> Excel',
-                                exportOptions: {
-                                    columns: ':not(:last-child)'
-                                }
+                                exportOptions: { columns: ':not(:last-child)' }
                             },
                             {
                                 extend: 'pdf',
                                 text: '<i class="ti ti-file-type-pdf"></i> PDF',
-                                exportOptions: {
-                                    columns: ':not(:last-child)'
-                                }
+                                exportOptions: { columns: ':not(:last-child)' }
                             },
                             {
                                 extend: 'print',
                                 text: '<i class="ti ti-printer"></i> Print',
-                                exportOptions: {
-                                    columns: ':not(:last-child)'
-                                }
+                                exportOptions: { columns: ':not(:last-child)' }
                             },
                             {
                                 extend: 'colvis',
-                                text: 'Kolom'
+                                text: 'Kolom',
                             }
                         ]
                     },
-
                 },
 
                 language: {

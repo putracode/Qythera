@@ -5,16 +5,20 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Edit Data Pasien</h3>
+                <div class="card-actions">
+                    <a href="{{ route('pasien.index') }}" class="btn btn-secondary">
+                        <i class="ti ti-arrow-left me-2"></i> Kembali
+                    </a>
+                </div>
             </div>
             <div class="card-body">
-                {{-- Action mengarah ke ID pasien yang diedit --}}
+
                 <form action="/back/pasien/{{ $pasien->id }}" method="post" autocomplete="off">
                     @csrf
-                    @method('PUT') {{-- Penting untuk proses Update --}}
+                    @method('PUT') 
 
                     <div class="mb-4">
                         <label class="form-label">Nama Lengkap</label>
-                        {{-- Value: Cek old input dulu, jika kosong ambil dari database --}}
                         <input type="text" class="form-control @error('nama') is-invalid @enderror"
                             placeholder="Masukkan nama lengkap" name="nama"
                             value="{{ old('nama', $pasien->user->nama ?? '') }}" required />
@@ -36,7 +40,6 @@
                     <div class="mb-4">
                         <label class="form-label">Password</label>
                         <div class="input-group input-group-flat">
-                            {{-- Password tidak required saat edit. Hanya diisi jika ingin ganti --}}
                             <input type="password" class="form-control @error('password') is-invalid @enderror"
                                 placeholder="Kosongkan jika tidak ingin mengganti password" name="password" />
                         </div>

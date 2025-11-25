@@ -3,12 +3,12 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
-            <h1>Manajemen Pasien</h1>
-            <h4>Kelola data pasien dan lihat riwayat kunjungan.</h4>
+            <h1>Manajemen Obat</h1>
+            <h4>Kelola data obat, stok, harga, dan tanggal kedaluwarsa.</h4>
         </div>
         <div>
-            <a href="/back/pasien/create" class="btn btn-primary">
-                <i class="ti ti-plus me-2"></i> Tambah Pasien Baru
+            <a href="/back/obat/create" class="btn btn-primary">
+                <i class="ti ti-plus me-2"></i> Tambah Obat Baru
             </a>
         </div>
     </div>
@@ -19,11 +19,11 @@
                 <div class="card-body">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <span class="bg-primary text-white avatar"><i class="ti ti-user"></i></span>
+                            <span class="bg-primary text-white avatar"><i class="ti ti-pills"></i></span>
                         </div>
                         <div class="col">
-                            <div class="font-weight-medium">Total Pasien</div>
-                            <div class="text-secondary">{{ $totalPasien ?? 0 }}</div>
+                            <div class="font-weight-medium">Total Obat</div>
+                            <div class="text-secondary">{{ $totalObat ?? 0 }}</div>
                         </div>
                     </div>
                 </div>
@@ -33,16 +33,15 @@
 
     <div class="card p-4">
         <div class="table-responsive">
-            <table class="table table-vcenter card-table" id="tabelPasien" style="width:100%">
+            <table class="table table-vcenter card-table" id="tabelObat" style="width:100%">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Nama</th>
-                        <th>Gender</th>
-                        <th>Tgl Lahir / Umur</th>
-                        <th>Telp</th>
-                        <th>Alamat</th>
-                        <th>Gol Darah</th>
+                        <th>Nama Obat</th>
+                        <th>Jenis</th>
+                        <th>Stok</th>
+                        <th>Harga</th>
+                        <th>Expired Date</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -67,7 +66,7 @@
             min-height: 300px;
         }
 
-        .dt-length{
+        .dt-length {
             margin-bottom: 15px;
         }
     </style>
@@ -92,12 +91,14 @@
 
     <script>
         $(document).ready(function() {
-            $("#tabelPasien").DataTable({
+            $("#tabelObat").DataTable({
                 processing: true,
                 serverSide: true,
 
-                ajax: "{{ route('pasien.json') }}",
-                searchDelay: 50,
+                ajax: "{{ route('obat.json') }}",
+                
+                searchDelay: 500, 
+
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -105,28 +106,24 @@
                         searchable: false
                     },
                     {
-                        data: 'nama',
-                        name: 'user.nama'
+                        data: 'nama_obat',
+                        name: 'nama_obat'
                     },
                     {
-                        data: 'gender',
-                        name: 'user.jenis_kelamin'
+                        data: 'jenis_obat',
+                        name: 'jenis_obat'
                     },
                     {
-                        data: 'tgl_lahir_umur',
-                        name: 'user.tgl_lahir'
+                        data: 'stok',
+                        name: 'stok'
                     },
                     {
-                        data: 'telp',
-                        name: 'user.telp'
+                        data: 'harga',
+                        name: 'harga'
                     },
                     {
-                        data: 'alamat',
-                        name: 'alamat'
-                    },
-                    {
-                        data: 'gol_darah',
-                        name: 'gol_darah'
+                        data: 'expired_date',
+                        name: 'expired_date'
                     },
                     {
                         data: 'action',
@@ -143,6 +140,7 @@
                     [10, 25, 50, "Semua"],
                 ],
                 autoWidth: false,
+                
                 layout: {
                     topStart: {
                         pageLength: {},
@@ -169,11 +167,10 @@
                             },
                             {
                                 extend: 'colvis',
-                                text: 'Kolom'
+                                text: 'Kolom',
                             }
                         ]
                     },
-
                 },
 
                 language: {

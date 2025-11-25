@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('dokters', function (Blueprint $table) {
+        Schema::create('rekam_medis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_user');
-            $table->string('spesialisasi');
-            $table->string('jadwal_praktik');
+            $table->foreignId('id_pasien');
+            $table->foreignId('id_dokter');
+            $table->string('diagnosa');
+            $table->string('catatan');
+            $table->string('tanggal_rm');
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('dokters');
+        Schema::dropIfExists('rekam_medis');
     }
 };

@@ -109,8 +109,8 @@
                                 <span class="nav-link-title"> Pasien </span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dokter">
+                        <li class="nav-item {{ Request::is('back/dokter*') ? 'active' : '' }}">
+                            <a class="nav-link" href="/back/dokter">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -123,8 +123,8 @@
                                 <span class="nav-link-title"> Dokter </span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dokter">
+                        <li class="nav-item {{ Request::is('back/obat*') ? 'active' : '' }}">
+                            <a class="nav-link" href="/back/obat">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -139,8 +139,8 @@
                                 <span class="nav-link-title">Obat</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/dokter">
+                        <li class="nav-item {{ Request::is('back/rekam-medis*') ? 'active' : '' }}">
+                            <a class="nav-link" href="/back/rekam-medis">
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -155,6 +155,13 @@
                                         <path d="M12 12l0 4" />
                                     </svg></span>
                                 <span class="nav-link-title">Rekam Medis</span>
+                            </a>
+                        </li>
+                        <li class="nav-item {{ Request::is('back/kunjungan*') ? 'active' : '' }}">
+                            <a class="nav-link" href="/back/kunjungan">
+                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                    <i class="ti ti-door-enter"></i></span>
+                                <span class="nav-link-title">Kunjungan</span>
                             </a>
                         </li>
                         <li class="nav-item dropdown">

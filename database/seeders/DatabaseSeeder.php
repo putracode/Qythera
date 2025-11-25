@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Dokter;
 use App\Models\Pasien;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -26,44 +27,46 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        // 1. Akun Admin (Putra)
         User::create([
-        'nama' => 'Putra (Admin)',
-        'email' => 'putra@gmail.com',
-        'password' => Hash::make('password'),
-        'telp' => '081200000001',
-        'tgl_lahir' => '1990-01-01',
-        'jenis_kelamin' => 'Laki Laki',
-        'role' => 'Admin' // Sesuai controller login
+            'nama' => 'Putra (Admin)',
+            'email' => 'putra@gmail.com',
+            'password' => Hash::make('password'),
+            'telp' => '081200000001',
+            'tgl_lahir' => '1990-01-01',
+            'jenis_kelamin' => 'Laki Laki',
+            'role' => 'Admin'
         ]);
 
-        // 2. Akun Dokter (Anaf)
-        User::create([
-        'nama' => 'Dr. Anaf',
-        'email' => 'anaf@gmail.com',
-        'password' => Hash::make('password'),
-        'telp' => '081200000002',
-        'tgl_lahir' => '1988-05-15',
-        'jenis_kelamin' => 'Perempuan',
-        'role' => 'Dokter' // Sesuai controller login
+        $dokterAnaf = User::create([
+            'nama' => 'Dr. Anaf',
+            'email' => 'anaf@gmail.com',
+            'password' => Hash::make('password'),
+            'telp' => '081200000002',
+            'tgl_lahir' => '1988-05-15',
+            'jenis_kelamin' => 'Perempuan',
+            'role' => 'Dokter'
         ]);
 
-        // 3. Akun Pasien (Reza) - Butuh 2 tabel
         $pasienUser = User::create([
-        'nama' => 'Reza (Pasien)',
-        'email' => 'reza@gmail.com',
-        'password' => Hash::make('password'),
-        'telp' => '081200000003',
-        'tgl_lahir' => '1999-11-20',
-        'jenis_kelamin' => 'Laki Laki',
-        'role' => 'pasien' // Sesuai controller login
+            'nama' => 'Reza (Pasien)',
+            'email' => 'reza@gmail.com',
+            'password' => Hash::make('password'),
+            'telp' => '081200000003',
+            'tgl_lahir' => '1999-11-20',
+            'jenis_kelamin' => 'Laki Laki',
+            'role' => 'Pasien' 
         ]);
 
-        // Buat data terkait di tabel 'pasiens'
         Pasien::create([
-        'id_user' => $pasienUser->id, // Mengambil ID dari $pasienUser
-        'alamat' => 'Jl. Pahlawan No. 12, Depok',
-        'gol_darah' => 'A'
+            'id_user' => $pasienUser->id,
+            'alamat' => 'Jl. Pahlawan No. 12, Depok',
+            'gol_darah' => 'A'
+        ]);
+
+        Dokter::create([
+            'id_user' => $dokterAnaf->id,
+            'spesialisasi' => 'Dokter Umum',
+            'jadwal_praktik' => 'Selasa 09:00-12:00, Kamis 09:00-12:00'
         ]);
 
         Pasien::factory(100)->create();
@@ -79,16 +82,17 @@ class DatabaseSeeder extends Seeder
         // echo "Menyiapkan 5.100 data Pasien di memori...\n";
         // $pasienData = [];
         // foreach ($users as $user) {
-        // $pasienData[] = Pasien::factory()->make([
-        // 'id_user' => $user->id,
-        // ])->toArray(); 
+        //     $pasienData[] = Pasien::factory()->make([
+        //         'id_user' => $user->id,
+        //     ])->toArray();
         // }
 
 
         // echo "Memasukkan data Pasien ke database (bulk insert)...\n";
         // foreach (array_chunk($pasienData, 500) as $chunk) {
-        // Pasien::insert($chunk);
-        // } 
-        //     Schema::enableForeignKeyConstraints(); echo "Seeding selesai!\n" ;
+        //     Pasien::insert($chunk);
+        // }
+        // Schema::enableForeignKeyConstraints();
+        // echo "Seeding selesai!\n";
     }
 }

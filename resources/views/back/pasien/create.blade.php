@@ -4,15 +4,16 @@
     <div class="col-12">
         <div class="card">
             <div class="card-header">
-                {{-- Anda bisa ganti judulnya di sini --}}
-                <h3 class="card-title">Tambah Data Baru</h3>
+                <h3 class="card-title">Tambah Data Pasien Baru</h3>
+                <div class="card-actions">
+                    <a href="{{ route('pasien.index') }}" class="btn btn-secondary">
+                        <i class="ti ti-arrow-left me-2"></i> Kembali
+                    </a>
+                </div>
             </div>
             <div class="card-body">
-                {{-- Pastikan action-nya mengarah ke route 'store' Anda --}}
                 <form action="/back/pasien/" method="post" autocomplete="off">
                     @csrf
-
-                    {{-- Menggunakan struktur mb-4 (margin-bottom) dari contoh register --}}
 
                     <div class="mb-4">
                         <label class="form-label">Nama Lengkap</label>
@@ -109,7 +110,6 @@
                         @enderror
                     </div>
 
-                    {{-- Menggunakan form-footer untuk tombol submit --}}
                     <div class="form-footer">
                         <button type="submit" class="btn btn-primary w-100">
                             Simpan Data
